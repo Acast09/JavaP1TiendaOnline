@@ -88,16 +88,37 @@ public class ClienteTiendaGUI extends JFrame {
         });
 
         btnAgregar.addActionListener(e -> {
-            String id = JOptionPane.showInputDialog(this, "ID del artículo:");
-            String cant = JOptionPane.showInputDialog(this, "Cantidad (enter=1):");
-            if (id != null && !id.trim().isEmpty()) {
-                if (cant == null || cant.trim().isEmpty())
-                    out.println("AGREGAR " + id);
-                else
-                    out.println("AGREGAR " + id + " " + cant);
-                leerRespuesta();
+            String idStr = JOptionPane.showInputDialog(this, "ID del artículo:");
+            String cantStr = JOptionPane.showInputDialog(this, "Cantidad (enter=1):");
+
+            try {
+                if (idStr != null && !idStr.trim().isEmpty()) {
+                    int id = Integer.parseInt(idStr.trim());
+                    int cantidad = 1; // valor por defecto
+                    if (cantStr != null && !cantStr.trim().isEmpty()) {
+                        cantidad = Integer.parseInt(cantStr.trim());
+                    }
+
+                    if (id <= 0 || cantidad <= 0) { // Validación
+                        JOptionPane.showMessageDialog(this,
+                                "No se permiten números negativos ni cero",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return; // salir del listener
+                    }
+
+                    // Enviar comando al servidor
+                    out.println("AGREGAR " + id + " " + cantidad);
+                    leerRespuesta();
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this,
+                        "Debe ingresar números válidos",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
+
 
         btnCarrito.addActionListener(e -> {
             out.println("VER_CARRITO");
@@ -105,16 +126,36 @@ public class ClienteTiendaGUI extends JFrame {
         });
 
         btnEliminar.addActionListener(e -> {
-            String id = JOptionPane.showInputDialog(this, "ID del artículo a eliminar:");
-            String cant = JOptionPane.showInputDialog(this, "Cantidad (enter=1):");
-            if (id != null && !id.trim().isEmpty()) {
-                if (cant == null || cant.trim().isEmpty())
-                    out.println("ELIMINAR " + id);
-                else
-                    out.println("ELIMINAR " + id + " " + cant);
-                leerRespuesta();
+            String idStr = JOptionPane.showInputDialog(this, "ID del artículo a eliminar:");
+            String cantStr = JOptionPane.showInputDialog(this, "Cantidad (enter=1):");
+
+            try {
+                if (idStr != null && !idStr.trim().isEmpty()) {
+                    int id = Integer.parseInt(idStr.trim());
+                    int cantidad = 1;
+                    if (cantStr != null && !cantStr.trim().isEmpty()) {
+                        cantidad = Integer.parseInt(cantStr.trim());
+                    }
+
+                    if (id <= 0 || cantidad <= 0) {
+                        JOptionPane.showMessageDialog(this,
+                                "No se permiten números negativos ni cero",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    out.println("ELIMINAR " + id + " " + cantidad);
+                    leerRespuesta();
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this,
+                        "Debe ingresar números válidos",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
+
 
         btnFinalizar.addActionListener(e -> {
             out.println("FINALIZAR");
